@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="800dp"
+    android:layout_height="600dp"
+    android:layout_weight="1"
+    android:gravity="center_vertical|center_horizontal"
+    android:orientation="vertical" >
+
+        <CheckBox
+            android:id="@+id/logmanager_dialog_palycbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:checked="true"
+            android:text="@string/tools_dialog_log_playlog" />
+
+        <CheckBox
+            android:id="@+id/logmanager_dialog_systemcbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:checked="true"
+            android:text="@string/tools_dialog_log_commonlog" />
+
+</LinearLayout>
