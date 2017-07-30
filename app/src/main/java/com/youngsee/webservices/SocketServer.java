@@ -6,14 +6,26 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.Html;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.widget.FrameLayout;
+import android.widget.TextView;
 
+import com.youngsee.posterdisplayer.PosterMainActivity;
+import com.youngsee.posterdisplayer.R;
 import com.youngsee.socket.NotifyInfo;
 import com.youngsee.socket.PatientQueue;
 import com.youngsee.socket.VoiceQueue;
 
+
+import org.dom4j.Document;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -40,6 +52,9 @@ public class SocketServer {
     public static boolean isLoadingNotifyProgram  = false;
     public static boolean isLoadingVoiceProgram   = false;
 
+    public static DatagramSocket socket = null;
+
+    //Thread
     public  ServerThread mServersocket = null;
     public  LoadPatientThread mLoadPatientThread = null;
     public  LoadNotifyThread  mLoadNotifyThread  = null;
@@ -56,7 +71,9 @@ public class SocketServer {
     private static final int EVENT_CHANGE_NOTIFY = 0x8002;
     private static final int EVENT_CHANGE_VOICE = 0x8003;
 
-    //Thread
+    //WindowInfo
+    TextView tv_main = null;
+    TextView tv_title = null;
 
     private SocketServer(Context context) {
         mContext = context;
@@ -70,6 +87,10 @@ public class SocketServer {
     }
 
     public void startRun(){
+        // Add Window Info
+        AddWindowInfo();
+        AddWindowTitle();
+
         stopRun();
         mServersocket      =    new ServerThread();
         mLoadPatientThread =    new LoadPatientThread();
@@ -103,50 +124,95 @@ public class SocketServer {
             mLoadVoiceThread.interrupt();
             mLoadVoiceThread = null;
         }
+
+        mHandler.removeMessages(EVENT_CHANGE_PATIENT);
+        mHandler.removeMessages(EVENT_CHANGE_NOTIFY);
+        mHandler.removeMessages(EVENT_CHANGE_VOICE);
     }
 
     public synchronized static SocketServer getInstance() {
         return mSSInstance;
     }
 
-    private void ConvertMsg(String info) {
-        String[] rawInfo = info.split("&");
-        for (int i = 0; i < rawInfo.length; i++) {
-            Log.d(TAG, rawInfo[i]);
+
+    private void AddWindowInfo(){
+        LayoutInflater inflater = PosterMainActivity.INSTANCE.getLayoutInflater();
+        tv_main = (TextView) inflater.inflate(R.layout.define_textview,null);
+        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(1828,601);
+        FrameLayout frame = new FrameLayout(mContext);
+        frame.setX(67);
+        frame.setY(348);
+        frame.addView(tv_main);
+        PosterMainActivity.INSTANCE.addContentView(frame,layoutParams);
+    }
+
+    private void AddWindowTitle(){
+        LayoutInflater inflater = PosterMainActivity.INSTANCE.getLayoutInflater();
+        tv_title = (TextView) inflater.inflate(R.layout.title_textview,null);
+        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(480,95);
+        FrameLayout frame = new FrameLayout(mContext);
+        frame.setX(660);
+        frame.setY(70);
+        frame.addView(tv_title);
+        PosterMainActivity.INSTANCE.addContentView(frame,layoutParams);
+    }
+
+    private void ConvertMsg(String info){
+        String[] rawInfo = info.split("\n");
+        for(int i = 0; i < rawInfo.length;i++){
+            Log.d("George",rawInfo[i]);
         }
     }
 
+    private String GetSpliteData(String info){
+        String[] rawInfo = info.split("<br/>");
+        int length = rawInfo.length;
+        String textInfo ="";
+        for(int i = 0; i < rawInfo.length-1;i++){
+            Log.d("GeorgeWin", rawInfo[length-i-2]);
+            textInfo += rawInfo[length-i-2]+"\n";
+        }
+        return textInfo;
+    }
+
+    private String XmlParse(String raw) {
+        String rawInfo = raw.substring(raw.lastIndexOf("PatInfo=")+9,raw.indexOf("\";<"));
+        return rawInfo;
+    }
+
     //将socket传输的数据转换为HashMap格式
-    private HashMap<String, String> ConvertRaw2HashMap(String[] raw) {
-        HashMap<String, String> hmInfo = new HashMap<String, String>();
-        for (int i = 0; i < raw.length; i++) {
+    private HashMap<String,String> ConvertRaw2HashMap(String[] raw){
+        HashMap<String,String>  hmInfo = new HashMap<String, String>();
+        for(int i = 0; i < raw.length; i++){
             String[] convertInfo = raw[i].split("=");
             //判断Key值是否已经存在
-            if (hmInfo.containsKey(convertInfo[0])) {
-                hmInfo.put(convertInfo[0] + 1, convertInfo[1]);
-            } else {
-                hmInfo.put(convertInfo[0], convertInfo[1]);
+            if(hmInfo.containsKey(convertInfo[0])){
+                hmInfo.put(convertInfo[0]+1,convertInfo[1]);
+            }else {
+                hmInfo.put(convertInfo[0],convertInfo[1]);
             }
         }
         return hmInfo;
     }
 
-    private int getDataType(String info) {
-        String[] rawInfo = info.split("&");
+
+
+    private int getDataType(String info){
+        String[] rawInfo = info.split("\n");
         int rawLength = rawInfo.length;
-        if (rawLength == 4) {
+        if (rawLength == 4){
             return VOICE_TYPE;
-        } else if (rawLength == 9) {
+        }else if (rawLength == 9){
             return PATIENT_TYPE;
-        } else if (rawLength == 10) {
+        }else if (rawLength == 10){
             return NOTIFY_TYPE;
-        } else {
+        }else {
             return ERROR_TYPE;
         }
     }
 
-    private void ConvertNotifyInfoQueue(String info) {
-        String[] rawInfo = info.split("&");
+    private void ConvertNotifyInfoQueue(String info){
+        String[] rawInfo = info.split("\n");
         infoHashMap = new HashMap<String, String>();
         NotifyInfo notifyInfo = new NotifyInfo();
 
@@ -161,9 +227,9 @@ public class SocketServer {
         notifyInfo.areaType1 = infoHashMap.get("areatype1");
         notifyInfo.dataId1 = infoHashMap.get("dataid1");
         notifyInfo.action = infoHashMap.get("action");
-        notifyInfo.notifyData1 = infoHashMap.get("data1");
+        notifyInfo.notifyData1 = rawInfo[9];
 
-        if (notifyInfo != null) {
+        if (notifyInfo != null){
             infoHashMap = null;
         }
 
@@ -171,8 +237,8 @@ public class SocketServer {
 
     }
 
-    private void ConvertVoiceQueue(String info) {
-        String[] rawInfo = info.split("&");
+    private void ConvertVoiceQueue(String info){
+        String[] rawInfo = info.split("\n");
         infoHashMap = new HashMap<String, String>();
         VoiceQueue voiceQueue = new VoiceQueue();
 
@@ -184,17 +250,18 @@ public class SocketServer {
         voiceQueue.url = infoHashMap.get("url");
         voiceQueue.session_id = infoHashMap.get("session_id");
 
-        if (voiceQueue != null) {
-            Log.d(TAG, infoHashMap.size() + "HashMap size");
-            Log.d(TAG, voiceQueue.url + "");
+        if(voiceQueue != null){
+            Log.d(TAG,infoHashMap.size()+"HashMap size");
+            Log.d(TAG,voiceQueue.url+"");
             infoHashMap = null;
         }
         voiceQueueArrayList.add(voiceQueue);
     }
 
 
-    private void ConvertPatientQueueMsg(String info) {
-        String[] rawInfo = info.split("&");
+
+    private void ConvertPatientQueueMsg(String info){
+        String[] rawInfo = info.split("\n");
         infoHashMap = new HashMap<String, String>();
         PatientQueue patientQueue = new PatientQueue();
 
@@ -211,87 +278,87 @@ public class SocketServer {
         patientQueue.dataid1 = infoHashMap.get("dataid1");
         patientQueue.data1 = infoHashMap.get("data1");
 
-        if (patientQueue != null) {
-            Log.d(TAG, infoHashMap.size() + "HashMap size");
-            Log.d(TAG, patientQueue.msg + "");
+        if(patientQueue != null){
+            Log.d(TAG,infoHashMap.size()+"HashMap size");
+            Log.d(TAG,patientQueue.msg+"");
             infoHashMap = null;
         }
         patientQueueArrayList.add(patientQueue);
     }
 
-    private int getMsgLength(String info) {
-        String[] rawInfo = info.split("&");
+    private int getMsgLength(String info){
+        String[] rawInfo = info.split("\n");
         return rawInfo.length;
     }
 
-    public class ServerThread extends Thread {
+    public class ServerThread extends Thread{
         private int count = 0;
-
         @Override
         public void run() {
 
-            try {
+            try{
+                Log.d(TAG,"Create ServerThread");
+                socket = new DatagramSocket(Port);
+
                 serversocket = new ServerSocket(Port);
-                while (true) {
-                    Log.d(TAG, "Running count" + count++);
-                    Socket socket = serversocket.accept();
-                    BufferedReader buffer = new BufferedReader(
-                            new InputStreamReader(socket.getInputStream())
-                    );
-                    String msg = buffer.readLine();
-                    //Log.d("TextDemo", "my msg"+msg);
+                while (true){
+                    Log.d(TAG,"Running count"+count++);
+
+                    byte data[] = new byte[4*1024];
+                    DatagramPacket packet = new DatagramPacket(data,data.length);
+                    socket.receive(packet);
+                    String msg = new String (packet.getData(),packet.getOffset(),packet.getLength(),"gb2312");
                     ConvertMsg(msg);
-                    Log.d(TAG, " Get Message Length" + getMsgLength(msg));
+                    Log.d(TAG," Get Message Length"+getMsgLength(msg));
                     InfoType = getDataType(msg);
-                    switch (InfoType) {
+                    switch (InfoType){
                         case VOICE_TYPE:
-                            Log.d(TAG, "This type RawInfo from Socket code" + VOICE_TYPE + "VOICE_TYPE");
+                            Log.d(TAG,"This type RawInfo from Socket code" + VOICE_TYPE + "VOICE_TYPE");
                             ConvertVoiceQueue(msg);
                             break;
                         case PATIENT_TYPE:
-                            Log.d(TAG, "This type RawInfo from Socket code" + PATIENT_TYPE + "PATIENT_TYPE");
+                            Log.d(TAG,"This type RawInfo from Socket code" + PATIENT_TYPE + "PATIENT_TYPE");
                             ConvertPatientQueueMsg(msg);
                             break;
                         case NOTIFY_TYPE:
-                            Log.d(TAG, "This type RawInfo from Socket code" + NOTIFY_TYPE + "NOTIFY_TYPE");
+                            Log.d(TAG,"This type RawInfo from Socket code" + NOTIFY_TYPE + "NOTIFY_TYPE");
                             ConvertNotifyInfoQueue(msg);
                             break;
                         case ERROR_TYPE:
-                            Log.d(TAG, "This type RawInfo from Socket is error code" + ERROR_TYPE);
+                            Log.d(TAG,"This type RawInfo from Socket is error code" + ERROR_TYPE);
                             continue;
                     }
                     //ConvertPatientQueueMsg(msg);
                 }
 
-            } catch (IOException e) {
+            }catch (IOException e){
                 e.printStackTrace();
             }
         }
     }
 
-
-    public class LoadPatientThread extends Thread {
+    public class LoadPatientThread extends Thread{
 
         @Override
         public void run() {
-            while (true) {
+            while (true){
                 try {
                     if (isLoadingPatientProgram) {
-                        Log.d(TAG, "is Loading Program ; wait for the socket info");
+                        Log.d(TAG,"is Loading Program ; wait for the socket info");
                         Thread.sleep(1000);
                         continue;
                     }
-                    if (patientQueueArrayList.size() > 0) {
-                        isLoadingPatientProgram = true;
+                    if (patientQueueArrayList.size()> 0){
+                        Log.d(TAG,"Send Message to Handler");
+                        isLoadingPatientProgram =true;
                         mHandler.sendEmptyMessage(EVENT_CHANGE_PATIENT);
-                    } else {
-                        Log.d(TAG, "All list is null ; wait for the socket info");
-                        Thread.sleep(1000);
-                        isLoadingPatientProgram = true;
+                    }else {
+                        Log.d(TAG,"All list is null ; wait for the socket info");
+                        Thread.sleep(1000*1);
                         continue;
                     }
 
-                } catch (Exception e) {
+                }catch (Exception e){
                     e.printStackTrace();
                 }
 
@@ -299,27 +366,27 @@ public class SocketServer {
         }
     }
 
-    public class LoadNotifyThread extends Thread {
+    public class LoadNotifyThread extends Thread{
 
         @Override
         public void run() {
-            while (true) {
+            while (true){
                 try {
                     if (isLoadingNotifyProgram) {
-                        Log.d(TAG, "is Loading Program ; wait for the socket info");
+                        Log.d(TAG,"is Loading Notify ; wait for the socket info");
                         Thread.sleep(1000);
                         continue;
                     }
-                    if (notifyInfoArrayList.size() > 0) {
-                        isLoadingNotifyProgram = true;
-                        mHandler.sendEmptyMessage(EVENT_CHANGE_NOTIFY);
-                    } else {
-                        Log.d(TAG, "All Notify list is null ; wait for the socket info");
-                        Thread.sleep(1000);
+                    if (notifyInfoArrayList.size()> 0){
+                        isLoadingNotifyProgram =true;
+                        mHandler.sendEmptyMessage(EVENT_CHANGE_NOTIFY);;
+                    }else {
+                        Log.d(TAG,"Notify list is null ; wait for the socket info");
+                        Thread.sleep(1000*1);
                         continue;
                     }
 
-                } catch (Exception e) {
+                }catch (Exception e){
                     e.printStackTrace();
                 }
 
@@ -327,28 +394,28 @@ public class SocketServer {
         }
     }
 
-    public class LoadVoiceThread extends Thread {
+    public class LoadVoiceThread extends Thread{
 
         @Override
         public void run() {
-            while (true) {
+            while (true){
                 try {
-                    if (isLoadingPatientProgram) {
-                        Log.d(TAG, "is Loading Program ; wait for the socket info");
+                    if (isLoadingVoiceProgram) {
+                        Log.d(TAG,"is Loading Voice ; wait for the socket info");
                         Thread.sleep(1000);
                         continue;
                     }
-                    if (patientQueueArrayList.size() > 0) {
-                        isLoadingPatientProgram = true;
-                        mHandler.sendEmptyMessage(EVENT_CHANGE_PATIENT);
-                    } else {
-                        Log.d(TAG, "All list is null ; wait for the socket info");
-                        Thread.sleep(1000);
-                        isLoadingPatientProgram = true;
+                    if (voiceQueueArrayList.size()> 0){
+                        isLoadingVoiceProgram =true;
+                        mHandler.sendEmptyMessage(EVENT_CHANGE_VOICE);
+                    }else {
+                        Log.d(TAG,"Voice list is null ; wait for the socket info");
+                        Thread.sleep(1000*1);
+                        isLoadingVoiceProgram = true;
                         continue;
                     }
 
-                } catch (Exception e) {
+                }catch (Exception e){
                     e.printStackTrace();
                 }
 
@@ -356,28 +423,29 @@ public class SocketServer {
         }
     }
 
-
-
-    //消息处理变动UI
     @SuppressLint("HandlerLeak")
-    final Handler mHandler = new Handler() {
+    final  Handler mHandler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
-            switch (msg.what) {
+            switch (msg.what){
                 case EVENT_CHANGE_PATIENT:
-                    Log.d(TAG, "GET Current Patient List Size" + patientQueueArrayList.size());
+                    Log.d(TAG,"GET CURRENT PATIENT LIST SIZE"+ patientQueueArrayList.size());
+                    tv_main.setText(GetSpliteData(patientQueueArrayList.get(0).data));
+                    tv_title.setText(patientQueueArrayList.get(0).data1);
                     patientQueueArrayList.remove(0);
                     isLoadingPatientProgram = false;
                     break;
                 case EVENT_CHANGE_NOTIFY:
-                    Log.d(TAG, "Get Current Notify List Size" + notifyInfoArrayList.size());
+                    Log.d(TAG, "Get Current Notify List Size"+ notifyInfoArrayList.size());
+                    Log.d(TAG, "Get Notify data " + notifyInfoArrayList.get(0).notifyData1);
+                    PosterMainActivity.INSTANCE.initTongRenNotifyPw(notifyInfoArrayList.get(0).notifyData , XmlParse(notifyInfoArrayList.get(0).notifyData1));
                     notifyInfoArrayList.remove(0);
-                    isLoadingNotifyProgram  = false;
+                    isLoadingNotifyProgram = false;
                     break;
                 case EVENT_CHANGE_VOICE:
                     Log.d(TAG, "Get Current Voice List Size" + voiceQueueArrayList.size());
                     voiceQueueArrayList.remove(0);
-                    isLoadingVoiceProgram   = false;
+                    isLoadingVoiceProgram = false;
                     break;
                 default:
                     break;
@@ -385,5 +453,6 @@ public class SocketServer {
             super.handleMessage(msg);
         }
     };
+
 
 }

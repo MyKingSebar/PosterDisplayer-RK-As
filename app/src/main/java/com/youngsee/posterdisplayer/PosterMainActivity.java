@@ -63,6 +63,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
@@ -100,6 +101,7 @@ import com.youngsee.posterdisplayer.R;
 import com.youngsee.power.PowerOnOffManager;
 import com.youngsee.screenmanager.ScreenManager;
 import com.youngsee.update.APKUpdateManager;
+import com.youngsee.webservices.SocketServer;
 import com.youngsee.webservices.WsClient;
 
 @SuppressLint({ "Wakelock", "InflateParams" })
@@ -108,6 +110,7 @@ public class PosterMainActivity extends Activity {
 	private WakeLock mWklk = null;
 	private FrameLayout mMainLayout = null;
 	private PopupWindow mOsdPupupWindow = null; // OSD 弹出菜单
+	private PopupWindow TongRengNotify = null;
 
 	private Intent popService = null;
 	private boolean isPopServiceRunning = false;
@@ -202,6 +205,11 @@ public class PosterMainActivity extends Activity {
 		if (ScreenManager.getInstance() == null) {
 			ScreenManager.createInstance(this).startRun();
 		}
+
+		// Socket数据管理线程
+        if (SocketServer.getInstance() == null) {
+            SocketServer.createInstance(this).startRun();
+        }
 
 		// 启动网络管理线程
 		if (WsClient.getInstance() == null) {
@@ -543,6 +551,26 @@ public class PosterMainActivity extends Activity {
 		return super.onKeyDown(keyCode, event);
 	}
 
+	public void initTongRenNotifyPw(String title, String content){
+		final LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		View NotifyView = inflater.inflate(R.layout.pop_tongren,null);
+
+		TongRengNotify  = new PopupWindow(500, 400);
+		TongRengNotify.setFocusable(false);
+		TongRengNotify.setContentView(NotifyView);
+		TongRengNotify.setOutsideTouchable(false);
+
+		TextView tv_pop_title = (TextView) NotifyView.findViewById(R.id.tv_pop_title);
+		TextView tv_pop_content = (TextView) NotifyView.findViewById(R.id.tv_pop_content);
+
+		tv_pop_title.setText(title);
+		tv_pop_content.setText(content);
+
+		TongRengNotify.showAtLocation(mMainLayout,Gravity.CENTER,0,0);
+		mHandler.postDelayed(rHideTongRenPopWndDelay, 3000);
+
+	}
+
 	private boolean apkIsExist(String packageName) {
 		if (!TextUtils.isEmpty(packageName)) {
 			try {
@@ -845,6 +873,17 @@ public class PosterMainActivity extends Activity {
 			mHandler.removeCallbacks(rHideOsdPopWndDelay);
 			if (mOsdPupupWindow != null && mOsdPupupWindow.isShowing()) {
 				mOsdPupupWindow.dismiss();
+			}
+		}
+	};
+
+	private Runnable rHideTongRenPopWndDelay = new Runnable() {
+		@Override
+		public void run() {
+			mHandler.removeCallbacks(rHideTongRenPopWndDelay);
+			if(TongRengNotify != null && TongRengNotify.isShowing()){
+				TongRengNotify.dismiss();
+				PosterApplication.setSystemBarVisible(INSTANCE, false);
 			}
 		}
 	};
