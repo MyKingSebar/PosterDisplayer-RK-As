@@ -176,6 +176,7 @@ public class SocketServer {
     }
 
     private String XmlParse(String raw) {
+        Log.d("GeorgeWin", "yanwei"+raw);
         String rawInfo = raw.substring(raw.lastIndexOf("PatInfo=")+9,raw.indexOf("\";<"));
         return rawInfo;
     }
@@ -183,7 +184,7 @@ public class SocketServer {
     //将socket传输的数据转换为HashMap格式
     private HashMap<String,String> ConvertRaw2HashMap(String[] raw){
         HashMap<String,String>  hmInfo = new HashMap<String, String>();
-        for(int i = 0; i < raw.length; i++){
+        for(int i = 1; i < raw.length; i++){
             String[] convertInfo = raw[i].split("=");
             //判断Key值是否已经存在
             if(hmInfo.containsKey(convertInfo[0])){
@@ -200,11 +201,11 @@ public class SocketServer {
     private int getDataType(String info){
         String[] rawInfo = info.split("\n");
         int rawLength = rawInfo.length;
-        if (rawLength == 4){
+        if (rawLength == 5){
             return VOICE_TYPE;
-        }else if (rawLength == 9){
-            return PATIENT_TYPE;
         }else if (rawLength == 10){
+            return PATIENT_TYPE;
+        }else if (rawLength == 11){
             return NOTIFY_TYPE;
         }else {
             return ERROR_TYPE;
@@ -212,6 +213,7 @@ public class SocketServer {
     }
 
     private void ConvertNotifyInfoQueue(String info){
+        Log.d(TAG,info);
         String[] rawInfo = info.split("\n");
         infoHashMap = new HashMap<String, String>();
         NotifyInfo notifyInfo = new NotifyInfo();
@@ -227,7 +229,7 @@ public class SocketServer {
         notifyInfo.areaType1 = infoHashMap.get("areatype1");
         notifyInfo.dataId1 = infoHashMap.get("dataid1");
         notifyInfo.action = infoHashMap.get("action");
-        notifyInfo.notifyData1 = rawInfo[9];
+        notifyInfo.notifyData1 = rawInfo[10];
 
         if (notifyInfo != null){
             infoHashMap = null;
@@ -238,6 +240,7 @@ public class SocketServer {
     }
 
     private void ConvertVoiceQueue(String info){
+        Log.d(TAG,info);
         String[] rawInfo = info.split("\n");
         infoHashMap = new HashMap<String, String>();
         VoiceQueue voiceQueue = new VoiceQueue();
@@ -261,7 +264,9 @@ public class SocketServer {
 
 
     private void ConvertPatientQueueMsg(String info){
+        Log.d(TAG,info);
         String[] rawInfo = info.split("\n");
+        Log.d("GeorgeWin", "Get PatientQUeueMsg length"+rawInfo.length+rawInfo[0]);
         infoHashMap = new HashMap<String, String>();
         PatientQueue patientQueue = new PatientQueue();
 
@@ -440,7 +445,7 @@ public class SocketServer {
                     Log.d(TAG, "Get Notify data " + notifyInfoArrayList.get(0).notifyData1);
                     PosterMainActivity.INSTANCE.initTongRenNotifyPw(notifyInfoArrayList.get(0).notifyData , XmlParse(notifyInfoArrayList.get(0).notifyData1));
                     notifyInfoArrayList.remove(0);
-                    isLoadingNotifyProgram = false;
+                    //isLoadingNotifyProgram = false;
                     break;
                 case EVENT_CHANGE_VOICE:
                     Log.d(TAG, "Get Current Voice List Size" + voiceQueueArrayList.size());

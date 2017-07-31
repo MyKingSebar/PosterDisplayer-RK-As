@@ -883,6 +883,7 @@ public class PosterMainActivity extends Activity {
 			mHandler.removeCallbacks(rHideTongRenPopWndDelay);
 			if(TongRengNotify != null && TongRengNotify.isShowing()){
 				TongRengNotify.dismiss();
+				SocketServer.getInstance().isLoadingNotifyProgram = false;
 				PosterApplication.setSystemBarVisible(INSTANCE, false);
 			}
 		}
