@@ -10,8 +10,12 @@ import android.view.LayoutInflater;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.youngsee.common.FileUtils;
+import com.youngsee.posterdisplayer.PosterApplication;
 import com.youngsee.posterdisplayer.PosterMainActivity;
 import com.youngsee.posterdisplayer.R;
+import com.youngsee.socket.FtpSocket;
+import com.youngsee.socket.MusicServiceHelper;
 import com.youngsee.socket.NotifyInfo;
 import com.youngsee.socket.PatientQueue;
 import com.youngsee.socket.VoiceQueue;
@@ -22,6 +26,7 @@ import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.DatagramPacket;
@@ -74,6 +79,12 @@ public class SocketServer {
     //WindowInfo
     TextView tv_main = null;
     TextView tv_title = null;
+
+    public String path = null;
+    public String voicename = null;
+
+    public String myCurrentFileName = null;
+    public String myLastFileName = null;
 
     private SocketServer(Context context) {
         mContext = context;
@@ -412,11 +423,11 @@ public class SocketServer {
                     }
                     if (voiceQueueArrayList.size()> 0){
                         isLoadingVoiceProgram =true;
+                        Log.d(TAG,"Begin to Loading Voice Program");
                         mHandler.sendEmptyMessage(EVENT_CHANGE_VOICE);
                     }else {
                         Log.d(TAG,"Voice list is null ; wait for the socket info");
                         Thread.sleep(1000*1);
-                        isLoadingVoiceProgram = true;
                         continue;
                     }
 
@@ -449,8 +460,60 @@ public class SocketServer {
                     break;
                 case EVENT_CHANGE_VOICE:
                     Log.d(TAG, "Get Current Voice List Size" + voiceQueueArrayList.size());
-                    voiceQueueArrayList.remove(0);
-                    isLoadingVoiceProgram = false;
+                    Log.d(TAG, "Get Current Voice Url " + voiceQueueArrayList.get(0).url );
+                    String[] convert = voiceQueueArrayList.get(0).url.split("/");
+                    //path =voiceQueueArrayList.get(0).url.substring(1,voiceQueueArrayList.get(0).url.length());
+
+                    path = "vis/voice/"+convert[convert.length-1].substring(0,25);
+                    voicename = convert[convert.length-1].substring(0,25);
+                    Log.d("GeorgeWin",convert[convert.length -1]+"length"+convert[convert.length-1].length());
+                    for (int i = 0 ; i < convert[convert.length-1].length();i++ ){
+                        Log.d("GeorgeWin for count",convert[convert.length-1].substring(i,i+1)+"index of info"+i);
+                    }
+                    //Log.d("GeorgeWin",convert[convert.length -1].indexOf(0)+"index of info 0");
+                    Log.d("GeorgeWin", path.length()+"path Length");
+                    Log.d("GeorgeWin", path.getBytes()+"get bytes");
+                    path.trim();
+                    try{
+                        path = new String(path.getBytes(),"utf-8");
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                    Log.d("GeorgeWin", path.length()+"path Length");
+                    Log.d("GeorgeWin", path.getBytes()+"get bytes");
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                Thread.sleep(1000);
+                                Log.d("GeorgeWin",path);
+                                new FtpSocket().downloadSingleFile(path, "/mnt/sdcard/TRDownload/",voicename, new FtpSocket.DownLoadProgressListener() {
+                                    @Override
+                                    public void onDownLoadProgress(String currentStep, long downProcess, File file) {
+                                        Log.d(TAG, "FTP STEPS" + currentStep+voicename);
+                                        myCurrentFileName = voicename;
+                                        if(currentStep.equals("Ftp 下载成功")){
+                                            Log.d("GeorgeWin","开始播放声音"+ PosterApplication.getProgramPath());
+                                            voiceQueueArrayList.remove(0);
+                                            try{
+                                                Thread.sleep(500);
+                                            }catch (InterruptedException e){
+                                                e.printStackTrace();
+                                            }
+                                            MusicServiceHelper.doBindMusicService("/sdcard/TRDownload/"+voicename);
+                                        }else if (currentStep.equals("FTP 文件不存在")){
+                                            isLoadingVoiceProgram =false;
+                                        }
+                                    }
+                                });
+                            }catch (Exception e){
+                                e.printStackTrace();
+                            }
+
+                        }
+                    }).start();
+/*                    voiceQueueArrayList.remove(0);
+                    isLoadingVoiceProgram = false;*/
                     break;
                 default:
                     break;

@@ -100,6 +100,7 @@ import com.youngsee.posterdisplayer.ApplicationSelector.ItemSelectListener;
 import com.youngsee.posterdisplayer.R;
 import com.youngsee.power.PowerOnOffManager;
 import com.youngsee.screenmanager.ScreenManager;
+import com.youngsee.socket.MusicServiceHelper;
 import com.youngsee.update.APKUpdateManager;
 import com.youngsee.webservices.SocketServer;
 import com.youngsee.webservices.WsClient;
@@ -334,6 +335,8 @@ public class PosterMainActivity extends Activity {
 		filter.addAction(Intent.ACTION_MEDIA_BAD_REMOVAL);
 		filter.addDataScheme("file");
 		registerReceiver(mReceiver, filter);
+
+
 	}
 
 	public void showOsd() {
@@ -567,7 +570,7 @@ public class PosterMainActivity extends Activity {
 		tv_pop_content.setText(content);
 
 		TongRengNotify.showAtLocation(mMainLayout,Gravity.CENTER,0,0);
-		mHandler.postDelayed(rHideTongRenPopWndDelay, 3000);
+		mHandler.postDelayed(rHideTongRenPopWndDelay, 1000*10);
 
 	}
 

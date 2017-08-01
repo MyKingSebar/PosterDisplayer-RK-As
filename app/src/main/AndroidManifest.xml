@@ -91,6 +91,8 @@
 
         <service android:name="com.youngsee.posterdisplayer.PopSubService" />
 
+        <service android:name="com.youngsee.socket.MusicService"/>
+
         <provider
             android:name="com.youngsee.provider.AdProvider"
             android:authorities="com.youngsee.posterdisplayer.provider" />
@@ -101,7 +103,8 @@
     <instrumentation
         android:name="android.test.InstrumentationTestRunner"
         android:targetPackage="com.youngsee.junit" >
-    </instrumentation>
+    </instrumentation>
+
     -->
 
 </manifest>
