@@ -137,4 +137,13 @@ public class Contants {
 	public static final String UDISK_NAME_PREFIX2 = "sd";
 	
 	public static final String TIME_ZONE_CHINA = "Asia/Shanghai";
+
+	//Socket
+	public static final String FTP_CONNECT_SUCCESS    = "FTP 连接成功";
+	public static final String FTP_CONNECT_FAILED     = "FTP 连接失败";
+	public static final String FTP_FILE_NOEXIST       = "FTP 文件不存在";
+	public static final String FTP_FILE_DOWNLOADING   = "FTP 正在下载";
+	public static final String FTP_DOWNLOAD_SUCCESS   = "FTP 下载成功";
+	public static final String FTP_DOWNLOAD_FAILED    = "FTP 下载失败";
+	public static final String FTP_DISCONNECT_SUCCESS = "FTP 断开成功";
 }

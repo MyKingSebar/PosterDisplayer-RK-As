@@ -17,6 +17,8 @@ public class MusicServiceHelper {
 
     private static String url;
 
+    private static int playcount;
+
     private static boolean isBindMusicService;// 是否绑定MusicService
 
     /**

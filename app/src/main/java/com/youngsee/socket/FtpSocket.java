@@ -1,5 +1,7 @@
 package com.youngsee.socket;
 
+import com.youngsee.common.Contants;
+
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPClientConfig;
@@ -62,26 +64,25 @@ public class FtpSocket {
      * @param listener
      *        监听器
      *
-     * @throws IOECEPTION
      */
 
     public void downloadSingleFile(String serverPath, String localPath, String fileName, DownLoadProgressListener listener) throws Exception{
 
-        //serverPath = "vis/voice/1640011ID192168185173.wav";
         //打开FTP服务
         try{
             this.openConnect();
-            listener.onDownLoadProgress("FTP 连接成功", 0, null);
+            listener.onDownLoadProgress(Contants.FTP_CONNECT_SUCCESS, 0, null);
         }catch (IOException e1){
             e1.printStackTrace();
-            listener.onDownLoadProgress("FTP 连接失败", 0, null);
+            listener.onDownLoadProgress(Contants.FTP_CONNECT_FAILED, 0, null);
             return;
         }
 
         FTPFile[] files = ftpClient.listFiles(serverPath);
 
         if (files.length == 0){
-            listener.onDownLoadProgress("FTP 文件不存在", 0, null);
+            listener.onDownLoadProgress(Contants.FTP_FILE_NOEXIST, 0, null);
+            this.closeConnect();
             return;
         }
         File mkFile = new File(localPath);
@@ -118,7 +119,7 @@ public class FtpSocket {
             if (currentSize / step != process){
                 process = currentSize / step;
                 if (process %5 == 0){
-                    listener.onDownLoadProgress("Ftp 正在下载", process, null);
+                    listener.onDownLoadProgress(Contants.FTP_FILE_DOWNLOADING, process, null);
                 }
             }
         }
@@ -126,14 +127,14 @@ public class FtpSocket {
         out.close();
         input.close();
         if (ftpClient.completePendingCommand()){
-            listener.onDownLoadProgress("Ftp 下载成功", 0 ,new File(localPath));
+            listener.onDownLoadProgress(Contants.FTP_DOWNLOAD_SUCCESS, 0 ,new File(localPath));
         } else{
-            listener.onDownLoadProgress("Ftp 下载失败", 0, null);
+            listener.onDownLoadProgress(Contants.FTP_DOWNLOAD_FAILED, 0, null);
         }
 
         // 下载完成之后关闭连接
         this.closeConnect();
-        listener.onDownLoadProgress("Ftp 断开成功",0, null);
+        listener.onDownLoadProgress(Contants.FTP_DISCONNECT_SUCCESS,0, null);
 
         return;
 
