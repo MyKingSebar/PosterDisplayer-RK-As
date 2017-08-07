@@ -87,6 +87,11 @@ public class SocketServer {
     public String myCurrentFileName = null;
     public String myLastFileName = null;
 
+    /*
+
+     */
+    //public String minor_
+
     private SocketServer(Context context) {
         mContext = context;
     }
@@ -186,6 +191,14 @@ public class SocketServer {
         }
         return textInfo;
     }
+
+    private String GetMinorSpliteData(String info){
+        String[] rawInfo = info.split("<br/>");
+
+        return "";
+    }
+
+
 
     private String XmlParse(String raw) {
         Log.d("GeorgeWin", "yanwei"+raw);

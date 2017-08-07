@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        android:id="@+id/tv_minor_first_room"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="65dp"
+        android:layout_marginLeft="350dp"
+        android:gravity="center_vertical"
+        android:textColor="@color/white"/>
+    <TextView
+        android:id="@+id/tv_minor_first_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="75dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginLeft="200dp"
+        android:gravity="center_vertical"
+        android:textColor="@color/white"/>
+    <TextView
+        android:id="@+id/tv_minor_first_current_patient"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="55dp"
+        android:layout_marginTop="235dp"
+        android:layout_marginLeft="360dp"
+        android:gravity="center_vertical"
+        android:textColor="@color/white"/>
+    <TextView
+        android:id="@+id/tv_minor_first_ready_patient"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="55dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginLeft="360dp"
+        android:gravity="center_vertical"
+        android:textColor="@color/white"/>
+
+</LinearLayout>
