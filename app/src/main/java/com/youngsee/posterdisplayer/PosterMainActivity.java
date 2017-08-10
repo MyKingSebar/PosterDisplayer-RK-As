@@ -209,13 +209,13 @@ public class PosterMainActivity extends Activity {
 		}
 
 		// Socket数据管理线程
-/*        if (SocketServer.getInstance() == null) {
+        if (SocketServer.getInstance() == null) {
             SocketServer.createInstance(this).startRun();
-        }*/
+        }
 
-		if (SocketServerMinor.getInstance() == null){
+/*		if (SocketServerMinor.getInstance() == null){
 			SocketServerMinor.createInstance(this).startRun();
-		}
+		}*/
 
 		// 启动网络管理线程
 		if (WsClient.getInstance() == null) {
@@ -563,7 +563,7 @@ public class PosterMainActivity extends Activity {
 		final LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View NotifyView = inflater.inflate(R.layout.pop_tongren,null);
 
-		TongRengNotify  = new PopupWindow(500, 400);
+		TongRengNotify  = new PopupWindow(900, 600);
 		TongRengNotify.setFocusable(false);
 		TongRengNotify.setContentView(NotifyView);
 		TongRengNotify.setOutsideTouchable(false);

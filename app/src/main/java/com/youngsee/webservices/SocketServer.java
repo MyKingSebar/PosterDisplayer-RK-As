@@ -331,7 +331,7 @@ public class SocketServer {
                 socket = new DatagramSocket(Port);
                 serversocket = new ServerSocket(Port);
                 while (true){
-                    Log.d(TAG,"Running count"+count++);
+                    //Log.d(TAG,"Running count"+count++);
 
                     byte data[] = new byte[4*1024];
                     DatagramPacket packet = new DatagramPacket(data,data.length);
@@ -509,6 +509,9 @@ public class SocketServer {
                                 });
                             }catch (Exception e){
                                 e.printStackTrace();
+                                Log.d(TAG,"FTP 异常清除数据");
+                                voiceQueueArrayList.clear();
+                                isLoadingVoiceProgram = false;
                             }
 
                         }

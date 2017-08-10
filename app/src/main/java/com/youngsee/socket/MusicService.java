@@ -70,6 +70,7 @@ public class MusicService extends Service {
                     if (playcount == 1){
                         start();
                     }else {
+                        Log.d("GerogeWin","The Media Player is finished, set the isLoadingVoiceProgram false flag");
                         stop();
                         playcount = 0;
                         FileUtils.delFile(url);
@@ -81,8 +82,10 @@ public class MusicService extends Service {
             start();
         } catch (IOException e) {
             e.printStackTrace();
+            SocketServer.isLoadingVoiceProgram =false;
         }catch (SecurityException e){
             e.printStackTrace();
+            SocketServer.isLoadingVoiceProgram =false;
         }
     }
 

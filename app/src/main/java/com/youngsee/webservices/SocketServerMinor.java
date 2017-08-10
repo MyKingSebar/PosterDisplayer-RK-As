@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.ServerSocket;
+import java.security.acl.LastOwnerException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -198,9 +199,9 @@ public class SocketServerMinor {
         firstCurrentPatient = rawInfo[length - 3];
         firstReadyPatient = rawInfo[length - 4];
 
-        SecondNumType = rawInfo [length-5];
-        SecondCurrentPatient = rawInfo [length-6];
-        SecondReadyPatient = rawInfo[length - 7];
+        SecondNumType = rawInfo [length-7];
+        SecondCurrentPatient = rawInfo [length-8];
+        SecondReadyPatient = rawInfo[length - 9];
         Log.d("GeorgeWin", firstNumType + " " + firstCurrentPatient + firstReadyPatient);
         Log.d("GeorgeWin", SecondNumType + " " + SecondCurrentPatient + SecondReadyPatient);
     }
@@ -244,7 +245,7 @@ public class SocketServerMinor {
                 socket = new DatagramSocket(Port);
                 serversocket = new ServerSocket(Port);
                 while (true) {
-                    Log.d(TAG, "Running count" + count++);
+                    //Log.d(TAG, "Running count" + count++);
                     byte data[] = new byte[4 * 1024];
                     DatagramPacket packet = new DatagramPacket(data, data.length);
                     socket.receive(packet);
@@ -310,13 +311,12 @@ public class SocketServerMinor {
                     tv_first_room.setText(firstRoom);
                     tv_first_num_type.setText(firstNumType);
                     tv_first_currentPatient.setText(firstCurrentPatient);
-                    tv_first_readyPatient.setText(firstCurrentPatient);
+                    tv_first_readyPatient.setText(firstReadyPatient);
 
-                    tv_second_room.setText(firstRoom);
-                    tv_second_num_type.setText(firstNumType);
-                    tv_second_currentPatient.setText(firstCurrentPatient);
-                    tv_second_readyPatient.setText(firstCurrentPatient);
-
+                    tv_second_room.setText(SecondRoom);
+                    tv_second_num_type.setText(SecondNumType);
+                    tv_second_currentPatient.setText(SecondCurrentPatient);
+                    tv_second_readyPatient.setText(SecondReadyPatient);
                     isLoadingPatientProgram = false;
                     patientQueueArrayList.remove(0);
                     break;

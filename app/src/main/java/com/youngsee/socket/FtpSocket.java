@@ -152,6 +152,7 @@ public class FtpSocket {
         int reply; //服务器相应值
         //连接至服务器
         ftpClient.connect(hostName,serverPort);
+        ftpClient.setDefaultTimeout(30000);
         reply = ftpClient.getReplyCode();
         if (!FTPReply.isPositiveCompletion(reply)){
             //断开连接
