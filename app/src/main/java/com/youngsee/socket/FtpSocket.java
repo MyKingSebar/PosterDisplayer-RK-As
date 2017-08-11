@@ -1,6 +1,7 @@
 package com.youngsee.socket;
 
 import com.youngsee.common.Contants;
+import com.youngsee.webservices.SocketServer;
 
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
@@ -152,7 +153,7 @@ public class FtpSocket {
         int reply; //服务器相应值
         //连接至服务器
         ftpClient.connect(hostName,serverPort);
-        ftpClient.setDefaultTimeout(30000);
+        ftpClient.setDefaultTimeout(15000);
         reply = ftpClient.getReplyCode();
         if (!FTPReply.isPositiveCompletion(reply)){
             //断开连接

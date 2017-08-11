@@ -44,7 +44,6 @@ import com.youngsee.common.Contants;
 import com.youngsee.common.DiskLruCache;
 import com.youngsee.common.FileUtils;
 import com.youngsee.common.MediaInfoRef;
-import com.youngsee.common.ReflectionUtils;
 import com.youngsee.common.RuntimeExec;
 import com.youngsee.common.SysOnOffTimeInfo;
 import com.youngsee.common.SysParamManager;
@@ -54,7 +53,6 @@ import com.youngsee.ftpoperation.FtpFileInfo;
 import com.youngsee.ftpoperation.FtpHelper;
 import com.youngsee.ftpoperation.FtpOperationInterface;
 import com.youngsee.logmanager.Logger;
-import com.youngsee.posterdisplayer.R;
 import com.youngsee.screenmanager.ScreenManager;
 import com.youngsee.webservices.SysParam;
 import com.youngsee.webservices.WsClient;
@@ -430,12 +428,14 @@ public class PosterApplication extends Application
         	if (getScreenWidth() < getScreenHeigth())
         	{
         		// portrait
-        		dstImg = BitmapFactory.decodeResource(getResources(), R.drawable.pdaiji);
+                dstImg = BitmapFactory.decodeResource(getResources(), R.drawable.tongren2);
+        		//dstImg = BitmapFactory.decodeResource(getResources(), R.drawable.pdaiji);
         	}
         	else
         	{
         		// landscape
-        		dstImg = BitmapFactory.decodeResource(getResources(), R.drawable.daiji);
+                dstImg = BitmapFactory.decodeResource(getResources(), R.drawable.tongren1);
+        		//dstImg = BitmapFactory.decodeResource(getResources(), R.drawable.daiji);
         	}
         }
 

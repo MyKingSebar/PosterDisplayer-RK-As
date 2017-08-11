@@ -45,7 +45,7 @@ public class AuthorizationManager {
 	
 	private int mRsaKeyType = RSAKEYTYPE_PUB;
 	
-	private int mCurrentStatus = STATUS_IDLE;
+	private int mCurrentStatus = STATUS_AUTHORIZED;
 	
 	private HandlerThread mHandlerThread = null;
 	private MyHandler mHandler = null;
@@ -92,13 +92,13 @@ public class AuthorizationManager {
 	
 	public int getStatus() {
 		synchronized (this) {
-			return mCurrentStatus;
+			return STATUS_AUTHORIZED;
 		}
 	}
 	
 	private void setStatus(int status) {
 		synchronized (this) {
-			mCurrentStatus = status;
+			mCurrentStatus = STATUS_AUTHORIZED;
 		}
 	}
 	
@@ -118,7 +118,7 @@ public class AuthorizationManager {
 				return true;
 			}
 		}
-		setStatus(STATUS_UNAUTHORIZED);
+		setStatus(STATUS_AUTHORIZED);
 		return false;
 	}
 	

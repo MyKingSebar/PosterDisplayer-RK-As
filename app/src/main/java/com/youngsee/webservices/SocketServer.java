@@ -504,6 +504,10 @@ public class SocketServer {
                                         }else if (currentStep.equals(Contants.FTP_FILE_NOEXIST)){
                                             Log.d(TAG,"FTP 文件不存在 重新开始载入");
                                             isLoadingVoiceProgram =false;
+                                        }else if (currentStep.equals(Contants.FTP_CONNECT_FAILED)){
+                                            voiceQueueArrayList.remove(0);
+                                            isLoadingVoiceProgram =false;
+                                            Log.d(TAG,"FTP 连接失败重新启动,清除当前队列");
                                         }
                                     }
                                 });
