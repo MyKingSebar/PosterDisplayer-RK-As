@@ -76,6 +76,7 @@ public class FtpSocket {
         }catch (IOException e1){
             e1.printStackTrace();
             listener.onDownLoadProgress(Contants.FTP_CONNECT_FAILED, 0, null);
+            SocketServer.isLoadingVoiceProgram = false;
             return;
         }
 
@@ -153,7 +154,7 @@ public class FtpSocket {
         int reply; //服务器相应值
         //连接至服务器
         ftpClient.connect(hostName,serverPort);
-        ftpClient.setDefaultTimeout(15000);
+        ftpClient.setDefaultTimeout(10000);
         reply = ftpClient.getReplyCode();
         if (!FTPReply.isPositiveCompletion(reply)){
             //断开连接
@@ -199,7 +200,5 @@ public class FtpSocket {
     public interface DownLoadProgressListener {
         public void onDownLoadProgress(String currentStep, long downProcess, File file);
     }
-
-
 
 }

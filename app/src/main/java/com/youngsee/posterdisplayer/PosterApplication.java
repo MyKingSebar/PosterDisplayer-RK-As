@@ -78,6 +78,7 @@ import android.support.v4.util.LruCache;
 import android.text.TextUtils;
 import android.text.format.Time;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 
 public class PosterApplication extends Application
@@ -407,11 +408,13 @@ public class PosterApplication extends Application
     public Bitmap getDefaultScreenImg()
     {
         Bitmap dstImg = null;
-        
+
+        Log.d("GeorgeWin","get the tongren image");
         // 从Resource中获取 (默认的待机画面)
         String code = PosterApplication.getInstance().getConfiguration().getFeatureCode();
         if(code != null && YSConfiguration.FEATURE_CODE_YUESHI.equalsIgnoreCase(code))
         {
+            Log.d("GeorgeWin","get the yueshi");
         	if (getScreenWidth() < getScreenHeigth())
         	{
         		// portrait
@@ -420,11 +423,12 @@ public class PosterApplication extends Application
         	else
         	{
         		// landscape
-        		dstImg = BitmapFactory.decodeResource(getResources(), R.drawable.daiji_ys);
+        		dstImg = BitmapFactory.decodeResource(getResources(), R.drawable.daiji);
         	}
         }
         else
         {
+            Log.d("GeorgeWin","get the common");
         	if (getScreenWidth() < getScreenHeigth())
         	{
         		// portrait
@@ -433,6 +437,7 @@ public class PosterApplication extends Application
         	}
         	else
         	{
+                Log.d("GeorgeWin","get the common");
         		// landscape
                 dstImg = BitmapFactory.decodeResource(getResources(), R.drawable.tongren1);
         		//dstImg = BitmapFactory.decodeResource(getResources(), R.drawable.daiji);

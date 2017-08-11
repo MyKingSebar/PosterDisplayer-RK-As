@@ -208,14 +208,14 @@ public class PosterMainActivity extends Activity {
 			ScreenManager.createInstance(this).startRun();
 		}
 
-/*		// Socket数据管理线程
+		// Socket数据管理线程
         if (SocketServer.getInstance() == null) {
             SocketServer.createInstance(this).startRun();
-        }*/
+        }
 
-		if (SocketServerMinor.getInstance() == null){
+/*		if (SocketServerMinor.getInstance() == null){
 			SocketServerMinor.createInstance(this).startRun();
-		}
+		}*/
 
 		// 启动网络管理线程
 		if (WsClient.getInstance() == null) {
