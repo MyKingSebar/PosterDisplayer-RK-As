@@ -439,7 +439,8 @@ public class PosterApplication extends Application
         	{
                 Log.d("GeorgeWin","get the common");
         		// landscape
-                dstImg = BitmapFactory.decodeResource(getResources(), R.drawable.tongren1);
+                //dstImg = BitmapFactory.decodeResource(getResources(), R.drawable.tongren1);
+                dstImg = BitmapFactory.decodeResource(getResources(), R.drawable.tongrenda2);
         		//dstImg = BitmapFactory.decodeResource(getResources(), R.drawable.daiji);
         	}
         }

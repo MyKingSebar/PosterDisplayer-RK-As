@@ -563,7 +563,7 @@ public class PosterMainActivity extends Activity {
 		final LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View NotifyView = inflater.inflate(R.layout.pop_tongren,null);
 
-		TongRengNotify  = new PopupWindow(900, 600);
+		TongRengNotify  = new PopupWindow(1500, 750);
 		TongRengNotify.setFocusable(false);
 		TongRengNotify.setContentView(NotifyView);
 		TongRengNotify.setOutsideTouchable(false);
