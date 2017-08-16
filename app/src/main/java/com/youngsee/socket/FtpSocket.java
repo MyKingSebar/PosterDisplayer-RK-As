@@ -1,5 +1,7 @@
 package com.youngsee.socket;
 
+import android.util.Log;
+
 import com.youngsee.common.Contants;
 import com.youngsee.webservices.SocketServer;
 
@@ -110,6 +112,7 @@ public class FtpSocket {
         long process = 0;
         long currentSize = 0;
         // 开始准备下载文件
+        Log.d("GerogeWin","Get locaFile Name"+localFile.getName());
         OutputStream out = new FileOutputStream(localFile, true);
         ftpClient.setRestartOffset(localSize);
         InputStream input = ftpClient.retrieveFileStream(serverPath);

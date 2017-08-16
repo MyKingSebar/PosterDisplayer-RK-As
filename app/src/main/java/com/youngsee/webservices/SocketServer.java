@@ -475,7 +475,12 @@ public class SocketServer {
                     Log.d(TAG, "Get Current Voice Url " + voiceQueueArrayList.get(0).url );
                     String[] convert = voiceQueueArrayList.get(0).url.split("/");
                     path =voiceQueueArrayList.get(0).url.substring(1,voiceQueueArrayList.get(0).url.length()-1);
-                    voicename = convert[convert.length-1].substring(0,25);
+                    Log.d(TAG,"The voice path print "+path);
+                    int voicenamelength = convert[convert.length-1].length();
+                    Log.d(TAG,"the length of voice name"+voicenamelength);
+                    voicename = convert[convert.length-1].substring(0,voicenamelength-1);
+                    Log.d(TAG,"Before replace function"+voicename);
+                    voicename.replace(":","");
                     path.trim();
                     try{
                         path = new String(path.getBytes(),"utf-8");
@@ -488,6 +493,8 @@ public class SocketServer {
                             try {
                                 Thread.sleep(1000);
                                 Log.d(TAG,"FTP 下载地址"+path);
+                                Log.d(TAG,"After Replace info "+voicename);
+
                                 new FtpSocket().downloadSingleFile(path, "/mnt/sdcard/TRDownload/",voicename, new FtpSocket.DownLoadProgressListener() {
                                     @Override
                                     public void onDownLoadProgress(String currentStep, long downProcess, File file) {
