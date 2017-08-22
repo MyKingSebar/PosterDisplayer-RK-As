@@ -104,6 +104,8 @@ import com.youngsee.socket.MusicServiceHelper;
 import com.youngsee.update.APKUpdateManager;
 import com.youngsee.webservices.SocketServer;
 import com.youngsee.webservices.SocketServerMinor;
+import com.youngsee.webservices.SocketServerMinor1;
+import com.youngsee.webservices.SocketServerMinor2;
 import com.youngsee.webservices.WsClient;
 
 @SuppressLint({ "Wakelock", "InflateParams" })
@@ -209,13 +211,17 @@ public class PosterMainActivity extends Activity {
 		}
 
 		// Socket数据管理线程
-        if (SocketServer.getInstance() == null) {
+/*        if (SocketServer.getInstance() == null) {
             SocketServer.createInstance(this).startRun();
-        }
+        }*/
 
-/*		if (SocketServerMinor.getInstance() == null){
-			SocketServerMinor.createInstance(this).startRun();
+/*		if (SocketServerMinor1.getInstance() == null){
+			SocketServerMinor1.createInstance(this).startRun();
 		}*/
+
+		if (SocketServerMinor2.getInstance() == null){
+			SocketServerMinor2.createInstance(this).startRun();
+		}
 
 		// 启动网络管理线程
 		if (WsClient.getInstance() == null) {

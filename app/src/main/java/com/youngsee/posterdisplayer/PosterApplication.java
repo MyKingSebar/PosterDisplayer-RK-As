@@ -434,14 +434,20 @@ public class PosterApplication extends Application
         		// portrait
                 dstImg = BitmapFactory.decodeResource(getResources(), R.drawable.tongren2);
         		//dstImg = BitmapFactory.decodeResource(getResources(), R.drawable.pdaiji);
+
+                //同仁xiaopin单屏显示 竖屏
+                dstImg = BitmapFactory.decodeResource(getResources(), R.drawable.tongrenxiaopin_protrait);
         	}
         	else
         	{
                 Log.d("GeorgeWin","get the common");
         		// landscape
                 //dstImg = BitmapFactory.decodeResource(getResources(), R.drawable.tongren1);
-                dstImg = BitmapFactory.decodeResource(getResources(), R.drawable.tongrenda2);
+                dstImg = BitmapFactory.decodeResource(getResources(), R.drawable.tongrendapin_3);
         		//dstImg = BitmapFactory.decodeResource(getResources(), R.drawable.daiji);
+
+                //同仁xiaopin单屏显示 横屏
+                dstImg = BitmapFactory.decodeResource(getResources(), R.drawable.tongrenxiaopin_landscape);
         	}
         }
 

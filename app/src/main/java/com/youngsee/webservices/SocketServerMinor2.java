@@ -23,17 +23,14 @@ import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Timer;
-import java.util.TimerTask;
-
-import static java.lang.Thread.sleep;
 
 /**
- * Created by WeiYanGeorge on 17/8/15.
+ * Created by WeiYanGeorge on 17/8/21.
  */
 
-public class SocketServerMinor1 {
+public class SocketServerMinor2 {
     private Context mContext = null;
-    private static SocketServerMinor1 mSSInstance = null;
+    private static SocketServerMinor2 mSSInstance = null;
     public static ServerSocket serversocket = null;
     public static String TAG = "PD SocketServer";
     public static int Port = 20001;
@@ -48,9 +45,9 @@ public class SocketServerMinor1 {
     public static DatagramSocket socket = null;
 
     //Thread
-    public ServerThread mServersocket = null;
-    public LoadPatientThread mLoadPatientThread = null;
-    public ShowScreenInfoThread showScreenInfoThread = null;
+    public SocketServerMinor2.ServerThread mServersocket = null;
+    public SocketServerMinor2.LoadPatientThread mLoadPatientThread = null;
+    public SocketServerMinor2.ShowScreenInfoThread showScreenInfoThread = null;
 
     private HashMap<String, String> infoHashMap = null;
 
@@ -95,30 +92,29 @@ public class SocketServerMinor1 {
     public static String waitingPatient = null;
     public static String waitingPatient1= null;
 
-
-    private SocketServerMinor1(Context context) {
+    private SocketServerMinor2(Context context) {
         mContext = context;
     }
 
-    public static SocketServerMinor1 createInstance(Context context) {
+    public static SocketServerMinor2 createInstance(Context context) {
         if (mSSInstance == null && context != null) {
-            mSSInstance = new SocketServerMinor1(context);
+            mSSInstance = new SocketServerMinor2(context);
         }
         return mSSInstance;
     }
 
-    public synchronized static SocketServerMinor1 getInstance() {
+    public synchronized static SocketServerMinor2 getInstance() {
         return mSSInstance;
     }
 
     private void AddWindowInfo1(){
         LayoutInflater inflater = PosterMainActivity.INSTANCE.getLayoutInflater();
-        ly_first_window = (FrameLayout) inflater.inflate(R.layout.minor_socket_view,null);
-        tv_first_room = (TextView) ly_first_window.findViewById(R.id.tv_minor_first_room);
-        tv_first_num_type = (TextView) ly_first_window.findViewById(R.id.tv_minor_first_type);
-        tv_first_readyPatient = (TextView) ly_first_window.findViewById(R.id.tv_minor_first_ready_patient);
-        tv_first_currentPatient = (TextView) ly_first_window.findViewById(R.id.tv_minor_first_current_patient);
-        tv_first_readyPatient1 = (TextView) ly_first_window.findViewById(R.id.tv_minor_first_ready_patient1);
+        ly_first_window = (FrameLayout) inflater.inflate(R.layout.minor_socket_view_landscape,null);
+        tv_first_room = (TextView) ly_first_window.findViewById(R.id.tv_minor_landscape_room_title);
+        tv_first_num_type = (TextView) ly_first_window.findViewById(R.id.tv_minor_landscape_num_type);
+        tv_first_readyPatient = (TextView) ly_first_window.findViewById(R.id.tv_minor_landscape_waiting_patient);
+        tv_first_currentPatient = (TextView) ly_first_window.findViewById(R.id.tv_minor_landscape_current_patient);
+        tv_first_readyPatient1 = (TextView)  ly_first_window.findViewById(R.id.tv_minor_landscape_waiting_patient1);
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         FrameLayout frame = new FrameLayout(mContext);
         frame.setX(0);
@@ -147,9 +143,9 @@ public class SocketServerMinor1 {
 
         AddWindowInfo1();
         //AddWindowInfo2();
-        mServersocket = new SocketServerMinor1.ServerThread();
-        mLoadPatientThread = new SocketServerMinor1.LoadPatientThread();
-        showScreenInfoThread = new SocketServerMinor1.ShowScreenInfoThread();
+        mServersocket = new SocketServerMinor2.ServerThread();
+        mLoadPatientThread = new SocketServerMinor2.LoadPatientThread();
+        showScreenInfoThread = new SocketServerMinor2.ShowScreenInfoThread();
 
         mServersocket.start();
         mLoadPatientThread.start();
@@ -385,7 +381,6 @@ public class SocketServerMinor1 {
                             doctorinfo = minorScreenInfoArrayList.get(i).doctorinfo;
                             currentPatient = minorScreenInfoArrayList.get(i).currentPatient;
                             waitingPatient = minorScreenInfoArrayList.get(i).waitingPatient;
-                            waitingPatient1 = minorScreenInfoArrayList.get(i).waitingPatient1;
                             try{
                                 mHandler.sendEmptyMessage(EVENT_CHANGE_PATIENT1);
                                 Thread.sleep(6000);

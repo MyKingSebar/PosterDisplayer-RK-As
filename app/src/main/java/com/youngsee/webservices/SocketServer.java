@@ -187,6 +187,11 @@ public class SocketServer {
         String textInfo ="";
         for(int i = 0; i < rawInfo.length-1;i++){
             Log.d("GeorgeWin", rawInfo[length-i-2]);
+/*            Log.d("GeorgeWin", "the length"+rawInfo[length-i-2].length());
+            int rawInfolenth = rawInfo[length-i-2].length();
+            if(rawInfolenth>55){
+                textInfo += rawInfo[length-i-2].substring(0,54)+"\n";
+            }d*/
             textInfo += rawInfo[length-i-2]+"\n";
         }
         return textInfo;

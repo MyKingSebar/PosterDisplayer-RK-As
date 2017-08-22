@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TextView
+        android:id="@+id/tv_minor_landscape_room_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="100dp"
+        android:layout_marginTop="235dp"
+        android:gravity="center"
+        android:layout_gravity="center_horizontal"
+        android:textColor="@color/white"/>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="500dp"
+        >
+        <TextView
+            android:id="@+id/tv_minor_landscape_num_type"
+            android:layout_width="500dp"
+            android:layout_height="wrap_content"
+            android:textSize="100dp"
+            android:text=""
+            android:layout_marginLeft="110dp"
+            android:maxEms="4"
+            android:textColor="@color/white"
+            />
+        <TextView
+            android:id="@+id/tv_minor_landscape_current_patient"
+            android:layout_width="500dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="720dp"
+            android:textSize="100dp"
+            android:text=""
+            android:maxEms="4"
+            android:textColor="@color/white"
+            />
+        <TextView
+            android:id="@+id/tv_minor_landscape_waiting_patient"
+            android:layout_width="500dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="1320dp"
+            android:textSize="100dp"
+            android:text=""
+            android:maxEms="4"
+            android:textColor="@color/white"
+            />
+
+        <TextView
+            android:id="@+id/tv_minor_landscape_waiting_patient1"
+            android:layout_width="500dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="250dp"
+            android:layout_marginLeft="1320dp"
+            android:textSize="100dp"
+            android:text=""
+            android:maxEms="4"
+            android:textColor="@color/white"
+            />
+    </FrameLayout>
+
+</FrameLayout>
