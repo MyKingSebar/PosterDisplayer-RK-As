@@ -463,10 +463,10 @@ public class SocketServerMinor1 {
                     //候诊1
                     if(waitingPatient.length()>7){
                         tv_first_readyPatient.setTextSize(120);
-                        tv_first_readyPatient.setText(waitingPatient1);
+                        tv_first_readyPatient.setText(waitingPatient);
                     }else {
                         tv_first_readyPatient.setTextSize(130);
-                        tv_first_readyPatient.setText(waitingPatient1);
+                        tv_first_readyPatient.setText(waitingPatient);
                     }
 
                     //候诊2

@@ -448,29 +448,29 @@ public class SocketServerMinor2 {
                     tv_first_num_type.setText(doctorinfo);
                     //当前就诊
                     if(currentPatient.length()>7){
-                        tv_first_currentPatient.setTextSize(120);
+                        tv_first_currentPatient.setTextSize(90);
                         tv_first_currentPatient.setText(currentPatient);
                     }else {
-                        tv_first_currentPatient.setTextSize(130);
+                        tv_first_currentPatient.setTextSize(110);
                         tv_first_currentPatient.setText(currentPatient);
                     }
 
                     //候诊1
                     if(waitingPatient.length()>7){
-                        tv_first_readyPatient.setTextSize(120);
-                        tv_first_readyPatient.setText(waitingPatient1);
+                        tv_first_readyPatient.setTextSize(90);
+                        tv_first_readyPatient.setText(waitingPatient);
                     }else {
-                        tv_first_readyPatient.setTextSize(130);
-                        tv_first_readyPatient.setText(waitingPatient1);
+                        tv_first_readyPatient.setTextSize(110);
+                        tv_first_readyPatient.setText(waitingPatient);
                     }
 
                     //候诊2
                     if(!BaseUtils.isEmptyString(waitingPatient1)){
                         if(waitingPatient1.length()>7){
-                            tv_first_readyPatient1.setTextSize(120);
+                            tv_first_readyPatient1.setTextSize(90);
                             tv_first_readyPatient1.setText(waitingPatient1);
                         }else {
-                            tv_first_readyPatient1.setTextSize(130);
+                            tv_first_readyPatient1.setTextSize(110);
                             tv_first_readyPatient1.setText(waitingPatient1);
                         }
                     }else {

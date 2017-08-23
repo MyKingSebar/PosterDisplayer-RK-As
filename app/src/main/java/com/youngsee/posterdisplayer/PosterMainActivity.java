@@ -215,13 +215,13 @@ public class PosterMainActivity extends Activity {
             SocketServer.createInstance(this).startRun();
         }*/
 
-/*		if (SocketServerMinor1.getInstance() == null){
+		if (SocketServerMinor1.getInstance() == null){
 			SocketServerMinor1.createInstance(this).startRun();
-		}*/
-
-		if (SocketServerMinor2.getInstance() == null){
-			SocketServerMinor2.createInstance(this).startRun();
 		}
+
+/*		if (SocketServerMinor2.getInstance() == null){
+			SocketServerMinor2.createInstance(this).startRun();
+		}*/
 
 		// 启动网络管理线程
 		if (WsClient.getInstance() == null) {

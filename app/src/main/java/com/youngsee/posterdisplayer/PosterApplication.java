@@ -447,7 +447,7 @@ public class PosterApplication extends Application
         		//dstImg = BitmapFactory.decodeResource(getResources(), R.drawable.daiji);
 
                 //同仁xiaopin单屏显示 横屏
-                dstImg = BitmapFactory.decodeResource(getResources(), R.drawable.tongrenxiaopin_landscape);
+                //dstImg = BitmapFactory.decodeResource(getResources(), R.drawable.tongrenxiaopin_landscape);
         	}
         }
 
